@@ -55,6 +55,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite frontend
 ]
 
+
+CORS_ALLOW_CREDENTIALS = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

@@ -15,6 +15,11 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import MyTokenObtainPairSerializer
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 # Update a game log
 @api_view(["PUT"])
@@ -54,25 +59,22 @@ def user_dashboard(request):
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def search_games(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "")  # default empty string
     page = request.GET.get("page", 1)
 
-    if not query:
-        return Response({"error": "Query parameter 'q' required"}, status=400)
-
     # Check DB first
-    games = Game.objects.filter(name__icontains=query)
-    if games.exists():
+    games = Game.objects.all()  # just return all games if no query
+    if games.exists() and not query:
         serializer = GameSerializer(games, many=True)
         return Response({"results": serializer.data, "source": "db"})
 
-    # If not in DB, fetch from RAWG
+    # Fetch from RAWG
     data = get_games(search_query=query, page=page)
     results = []
 
     for g in data.get("results", []):
-        # Save to DB for caching
         game, _ = Game.objects.get_or_create(
             rawg_id=g["id"],
             defaults={
@@ -85,7 +87,6 @@ def search_games(request):
         results.append(GameSerializer(game).data)
 
     return Response({"results": results, "source": "rawg"})
-
 
 
 @api_view(["POST"])
@@ -175,3 +176,19 @@ def games_list(request):
     page = request.GET.get("page", 1)
     data = get_games(search_query=search, page=page)
     return Response(data)
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_game_detail(request, rawg_id):
+    try:
+        game = Game.objects.get(rawg_id=rawg_id)
+        serializer = GameSerializer(game)
+        return Response(serializer.data)
+    except Game.DoesNotExist:
+        # fallback: fetch from RAWG API
+        data = get_games()
+        game_data = next((g for g in data["results"] if g["id"] == int(rawg_id)), None)
+        if not game_data:
+            return Response({"error": "Game not found"}, status=404)
+        game = get_or_create_game(game_data)
+        return Response(GameSerializer(game).data)

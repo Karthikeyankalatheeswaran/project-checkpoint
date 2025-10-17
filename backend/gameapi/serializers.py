@@ -1,6 +1,15 @@
 from rest_framework import serializers
 from .models import Game, GameLog
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Add custom claims
+        token['username'] = user.username
+        return token
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
