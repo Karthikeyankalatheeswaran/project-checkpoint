@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
@@ -8,9 +8,12 @@ export default function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
+    const username = localStorage.getItem("username");
+
     if (token) {
-      const username = localStorage.getItem("username");
       setUser({ name: username || "Player" });
+    } else {
+      setUser(null);
     }
   }, []);
 
@@ -22,85 +25,78 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  const handleSearchSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    const query = searchQuery.trim();
+    if (query) {
+      navigate(`/search?q=${query}`);
       setSearchQuery("");
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-      <Link className="navbar-brand" to="/">
-        GameLog
-      </Link>
+    <nav className="custom-navbar">
+      <div className="container-fluid px-4">
+        <div className="navbar-content">
+          {/* Logo/Brand */}
+          <Link className="navbar-brand" to="/">
+            <span className="brand-icon">🎮</span>
+            <span className="brand-text">Checkpoint</span>
+          </Link>
 
-      <div className="collapse navbar-collapse">
-        <ul className="navbar-nav me-auto">
-          <li className="nav-item">
-            <Link className="nav-link" to="/">
+          {/* Navigation Links */}
+          <div className="navbar-links d-none d-lg-flex">
+            <Link className="nav-link-item" to="/">
               Home
             </Link>
-          </li>
-          {user && (
-            <li className="nav-item">
-              <Link className="nav-link" to="/dashboard">
-                My Logs
+            {user && (
+              <Link className="nav-link-item" to="/dashboard">
+                My Library
               </Link>
-            </li>
-          )}
-        </ul>
+            )}
+          </div>
 
-        {/* Search Bar */}
-        <form
-          className="d-flex me-3"
-          onSubmit={handleSearchSubmit}
-          role="search"
-        >
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Search games..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="btn btn-outline-light" type="submit">
-            Search
-          </button>
-        </form>
+          {/* Search Bar */}
+          <form
+            className="navbar-search d-none d-md-block"
+            onSubmit={handleSearch}
+          >
+            <div className="search-wrapper">
+              <i className="bi bi-search search-icon"></i>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search games..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </form>
 
-        {/* User Auth Buttons */}
-        <ul className="navbar-nav ms-auto">
-          {user ? (
-            <>
-              <li className="nav-item">
-                <span className="nav-link">Hello, {user.name}</span>
-              </li>
-              <li className="nav-item">
-                <button
-                  className="btn btn-outline-light"
-                  onClick={handleLogout}
-                >
-                  Logout
+          {/* User Actions */}
+          <div className="navbar-actions">
+            {user ? (
+              <>
+                <span className="user-name d-none d-sm-inline">
+                  {user.name}
+                </span>
+                <button className="btn btn-logout" onClick={handleLogout}>
+                  <i className="bi bi-box-arrow-right"></i>
+                  <span className="d-none d-sm-inline ms-2">Logout</span>
                 </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
+              </>
+            ) : (
+              <>
+                <Link className="btn btn-link-nav" to="/login">
                   Login
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">
-                  Register
+                <Link className="btn btn-signup" to="/register">
+                  Sign Up
                 </Link>
-              </li>
-            </>
-          )}
-        </ul>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );

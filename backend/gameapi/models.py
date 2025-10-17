@@ -7,6 +7,7 @@ class Game(models.Model):
     released = models.DateField(null=True, blank=True)
     background_image = models.URLField(null=True, blank=True)
     rating = models.FloatField(null=True, blank=True)
+    platform = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -25,6 +26,7 @@ class GameLog(models.Model):
     review = models.TextField(blank=True, null=True)
     rating = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    platform = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         unique_together = ("user", "game")

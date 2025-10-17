@@ -141,7 +141,7 @@ def log_game(request):
     hours_played = request.data.get("hours_played", 0)
     review = request.data.get("review", "")
     rating = request.data.get("rating")
-
+    platform = request.data.get("platform", "")
     # fetch game from DB or RAWG API
     try:
         game = Game.objects.get(rawg_id=rawg_id)
@@ -163,6 +163,7 @@ def log_game(request):
             "hours_played": hours_played,
             "review": review,
             "rating": rating,
+            "platform": platform,
         },
     )
 
