@@ -22,7 +22,9 @@ export const refreshToken = (refresh) =>
 // --- Games ---
 export const searchGames = (query, page = 1) =>
   api.get(`search-games/?q=${query}&page=${page}`, {
-    headers: getAuthHeaders(),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
   });
 
 export const logGame = (data) =>

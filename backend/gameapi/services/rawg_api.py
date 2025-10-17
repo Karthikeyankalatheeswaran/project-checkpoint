@@ -1,17 +1,17 @@
 import os
 import requests
+from dotenv import load_dotenv
 
-RAWG_API_URL = "https://api.rawg.io/api/games"
+load_dotenv()
+
 RAWG_API_KEY = os.getenv("RAWG_API_KEY")
 
-def get_games(search_query=None, page=1):
+def get_games(search_query="", page=1):
+    url = "https://api.rawg.io/api/games"
     params = {
         "key": RAWG_API_KEY,
-        "page": page,
+        "search": search_query,
+        "page": page
     }
-    if search_query:
-        params["search"] = search_query
-
-    response = requests.get(RAWG_API_URL, params=params)
-    response.raise_for_status()
-    return response.json()
+    res = requests.get(url, params=params)
+    return res.json()

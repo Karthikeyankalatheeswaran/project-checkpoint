@@ -5,6 +5,13 @@ export default function SearchGames() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/search-games/?q=zelda")
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   const handleSearch = async () => {
     try {
       const res = await searchGames(query);

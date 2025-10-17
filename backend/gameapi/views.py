@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny
 
 # Update a game log
 @api_view(["PUT"])
@@ -86,32 +87,36 @@ def search_games(request):
     return Response({"results": results, "source": "rawg"})
 
 
-@api_view(["POST"])
-def register_user(request):
-    username = request.data.get("username")
-    email = request.data.get("email")
-    password = request.data.get("password")
 
-    if not username or not password:
-        return Response({"error": "Username and password required"}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def register_user(request):
+    data = request.data
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+
+    if not username or not email or not password:
+        return Response({"error": "All fields required"}, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(username=username).exists():
         return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-    user = User.objects.create_user(username=username, email=email, password=password)
-    user.save()
+    if User.objects.filter(email=email).exists():
+        return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Generate JWT token
+    # Create user
+    user = User.objects.create_user(username=username, email=email, password=password)
+
+    # Generate JWT tokens
     refresh = RefreshToken.for_user(user)
-    return Response({
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email
+    return Response(
+        {
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
         },
-        "refresh": str(refresh),
-        "access": str(refresh.access_token)
-    }, status=status.HTTP_201_CREATED)
+        status=status.HTTP_201_CREATED,
+    )
 
 
 # Add game to DB (if not exists)
