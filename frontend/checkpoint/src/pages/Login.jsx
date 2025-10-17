@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -12,7 +11,6 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
       const res = await loginUser(form);
       localStorage.setItem("access_token", res.data.access);
@@ -22,70 +20,78 @@ export default function Login() {
     } catch (err) {
       console.error("Login error:", err.response || err);
       alert("Login failed. Check username and password.");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-5">
-            <div className="auth-card">
-              {/* Auth Header */}
-              <div className="auth-header text-center mb-4">
-                <h2 className="auth-title">Welcome Back</h2>
-                <p className="auth-subtitle text-muted">
-                  Sign in to continue your gaming journey
-                </p>
-              </div>
+    <div
+      className="container-fluid min-vh-100 d-flex align-items-center justify-content-center"
+      style={{ backgroundColor: "#f8f9fa" }}
+    >
+      <div
+        className="custom-card p-5"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
+        <div className="text-center mb-4">
+          <i
+            className="bi bi-joystick display-4"
+            style={{ color: "#3498db" }}
+          ></i>
+          <h3 className="fw-bold mt-3" style={{ color: "#2c3e50" }}>
+            Welcome Back
+          </h3>
+          <p style={{ color: "#7f8c8d" }}>Sign in to your account</p>
+        </div>
 
-              {/* Auth Form */}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="form-label">Username</label>
-                  <input
-                    name="username"
-                    type="text"
-                    className="form-control custom-input"
-                    placeholder="Enter your username"
-                    value={form.username}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="form-label">Password</label>
-                  <input
-                    name="password"
-                    type="password"
-                    className="form-control custom-input"
-                    placeholder="Enter your password"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn btn-save w-100 mb-3"
-                  disabled={loading}
-                >
-                  {loading ? "Signing in..." : "Sign In"}
-                </button>
-
-                <p className="text-center text-muted mb-0">
-                  Don't have an account?{" "}
-                  <a href="/register" className="auth-link">
-                    Sign up
-                  </a>
-                </p>
-              </form>
-            </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+              Username
+            </label>
+            <input
+              name="username"
+              className="form-control form-control-custom"
+              placeholder="Enter your username"
+              value={form.username}
+              onChange={handleChange}
+              required
+            />
           </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+              Password
+            </label>
+            <input
+              name="password"
+              type="password"
+              className="form-control form-control-custom"
+              placeholder="Enter your password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary-custom btn-custom w-100 py-3 fw-bold"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <div className="text-center mt-4">
+          <p style={{ color: "#7f8c8d" }}>
+            Don't have an account?{" "}
+            <a
+              href="/register"
+              className="fw-bold text-decoration-none"
+              style={{ color: "#3498db" }}
+            >
+              Sign up
+            </a>
+          </p>
         </div>
       </div>
     </div>

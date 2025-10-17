@@ -74,87 +74,84 @@ export default function GameDetailPage() {
 
   if (loading)
     return (
-      <div className="detail-container d-flex align-items-center justify-content-center min-vh-100">
-        <div className="spinner-border text-light" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+      <div className="container my-4 p-4 rounded">
+        <div
+          className="custom-card skeleton-loader"
+          style={{ height: "400px" }}
+        ></div>
       </div>
     );
 
   if (!game)
     return (
-      <div className="detail-container d-flex align-items-center justify-content-center min-vh-100">
-        <div className="empty-state text-center">
-          <h3 className="text-white">Game not found</h3>
-          <p className="text-muted">
-            The game you're looking for doesn't exist
-          </p>
-        </div>
+      <div className="container my-4 text-center p-5">
+        <i
+          className="bi bi-exclamation-triangle display-1"
+          style={{ color: "#e74c3c" }}
+        ></i>
+        <h3 className="mt-3" style={{ color: "#2c3e50" }}>
+          Game not found
+        </h3>
       </div>
     );
 
   return (
-    <div className="detail-container">
-      <div className="container py-5">
+    <div className="container my-4 p-4 rounded">
+      <div className="custom-card p-4">
         <div className="row">
-          {/* Left Column - Game Poster */}
-          <div className="col-12 col-lg-4 mb-4 mb-lg-0">
-            <div className="detail-poster-wrapper">
-              {game.background_image && (
-                <img
-                  src={game.background_image}
-                  alt={game.name}
-                  className="detail-poster"
-                />
-              )}
-            </div>
-
-            {/* Quick Stats Card */}
-            <div className="stats-card mt-4">
-              <div className="stat-item">
-                <span className="stat-label">Released</span>
-                <span className="stat-value">{game.released || "N/A"}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Rating</span>
-                <span className="stat-value">
-                  {game.rating ? `${game.rating}/5` : "N/A"}
-                </span>
-              </div>
-            </div>
+          <div className="col-md-4">
+            {game.background_image && (
+              <img
+                src={game.background_image}
+                alt={game.name}
+                className="img-fluid rounded-3 shadow"
+                style={{
+                  maxHeight: "400px",
+                  objectFit: "cover",
+                  width: "100%",
+                }}
+              />
+            )}
           </div>
+          <div className="col-md-8">
+            <h2 className="fw-bold mb-3" style={{ color: "#2c3e50" }}>
+              {game.name}
+            </h2>
 
-          {/* Right Column - Game Info */}
-          <div className="col-12 col-lg-8">
-            {/* Game Title */}
-            <div className="detail-header mb-4">
-              <h1 className="detail-title">{game.name}</h1>
-              <p className="detail-subtitle text-muted">
-                {game.released ? new Date(game.released).getFullYear() : "TBA"}
-              </p>
+            <div className="mb-4">
+              <span className="badge bg-primary rounded-pill px-3 py-2 me-2 fw-bold">
+                Released: {game.released || "TBA"}
+              </span>
+              <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold">
+                Rating: {game.rating || "N/A"}
+              </span>
             </div>
 
-            {/* Game Description */}
-            <div className="detail-section mb-5">
-              <h5 className="section-title">About</h5>
-              <p className="detail-description">
-                {game.description_raw ||
-                  game.description ||
-                  "No description available."}
-              </p>
-            </div>
+            <p
+              className="mb-4"
+              style={{ color: "#5d6d7e", lineHeight: "1.6", fontWeight: "500" }}
+            >
+              {game.description_raw ||
+                game.description ||
+                "No description available."}
+            </p>
 
-            {/* Tracking Section */}
             {isLoggedIn ? (
-              <div className="tracking-section">
-                <h5 className="section-title mb-4">Track This Game</h5>
+              <div className="custom-card p-4 mt-4">
+                <h4 className="fw-bold mb-4" style={{ color: "#2c3e50" }}>
+                  Track Your Game
+                </h4>
 
-                <div className="tracking-form">
-                  {/* Status Select */}
-                  <div className="mb-4">
-                    <label className="form-label">Status</label>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label
+                      className="form-label fw-bold"
+                      style={{ color: "#2c3e50" }}
+                    >
+                      Status
+                    </label>
                     <select
-                      className="form-select custom-select"
+                      className="form-select form-control-custom"
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
@@ -166,78 +163,88 @@ export default function GameDetailPage() {
                     </select>
                   </div>
 
-                  {/* Hours Played */}
-                  <div className="mb-4">
-                    <label className="form-label">Hours Played</label>
+                  <div className="col-md-6 mb-3">
+                    <label
+                      className="form-label fw-bold"
+                      style={{ color: "#2c3e50" }}
+                    >
+                      Hours Played
+                    </label>
                     <input
                       type="number"
-                      className="form-control custom-input"
+                      className="form-control form-control-custom"
                       min="0"
-                      placeholder="0"
                       value={hoursPlayed}
                       onChange={(e) => setHoursPlayed(e.target.value)}
                     />
                   </div>
+                </div>
 
-                  {/* Platform */}
-                  <div className="mb-4">
-                    <label className="form-label">Platform</label>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label
+                      className="form-label fw-bold"
+                      style={{ color: "#2c3e50" }}
+                    >
+                      Platform
+                    </label>
                     <input
                       type="text"
-                      className="form-control custom-input"
+                      className="form-control form-control-custom"
                       placeholder="e.g. PS5, PC, Xbox..."
                       value={platform}
                       onChange={(e) => setPlatform(e.target.value)}
                     />
                   </div>
 
-                  {/* Rating */}
-                  <div className="mb-4">
-                    <label className="form-label">
-                      Rating <span className="text-muted">(out of 5)</span>
+                  <div className="col-md-6 mb-3">
+                    <label
+                      className="form-label fw-bold"
+                      style={{ color: "#2c3e50" }}
+                    >
+                      Your Rating (out of 5)
                     </label>
                     <input
                       type="number"
-                      className="form-control custom-input"
+                      className="form-control form-control-custom"
                       min="0"
                       max="5"
                       step="0.5"
-                      placeholder="4.5"
                       value={rating}
                       onChange={(e) => setRating(e.target.value)}
                     />
                   </div>
-
-                  {/* Review */}
-                  <div className="mb-4">
-                    <label className="form-label">Your Review</label>
-                    <textarea
-                      className="form-control custom-textarea"
-                      rows="5"
-                      placeholder="Share your thoughts about this game..."
-                      value={review}
-                      onChange={(e) => setReview(e.target.value)}
-                    ></textarea>
-                  </div>
-
-                  {/* Save Button */}
-                  <button
-                    onClick={() => handleLogGame(status)}
-                    className="btn btn-save w-100"
-                    disabled={!status}
-                  >
-                    Save Log
-                  </button>
                 </div>
+
+                <div className="mb-4">
+                  <label
+                    className="form-label fw-bold"
+                    style={{ color: "#2c3e50" }}
+                  >
+                    Review
+                  </label>
+                  <textarea
+                    className="form-control form-control-custom"
+                    rows="4"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                  ></textarea>
+                </div>
+
+                <button
+                  onClick={() => handleLogGame(status)}
+                  className="btn btn-primary-custom btn-custom w-100"
+                >
+                  Save Log
+                </button>
               </div>
             ) : (
-              <div className="login-prompt">
-                <p className="text-muted">
-                  <a href="/login" className="login-link">
-                    Log in
-                  </a>{" "}
-                  to track this game
-                </p>
+              <div className="alert alert-info mt-4 rounded-3">
+                <i className="bi bi-info-circle me-2"></i>
+                <a href="/login" className="alert-link fw-bold">
+                  Login
+                </a>{" "}
+                to log this game as playing, completed, or wishlist.
               </div>
             )}
           </div>

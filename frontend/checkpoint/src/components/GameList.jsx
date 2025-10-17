@@ -3,12 +3,28 @@ import GameCard from "./GameCard";
 
 export default function GameList({ games }) {
   if (!games || games.length === 0)
-    return <p className="text-gray-400">No games found.</p>;
+    return (
+      <div className="text-center py-5">
+        <i
+          className="bi bi-emoji-frown display-1"
+          style={{ color: "#bdc3c7" }}
+        ></i>
+        <h4 className="mt-3" style={{ color: "#2c3e50" }}>
+          No games found
+        </h4>
+        <p style={{ color: "#7f8c8d" }}>Try adjusting your search or filters</p>
+      </div>
+    );
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <div className="row g-4">
       {games.map((game) => (
-        <GameCard key={game.id || game.rawg_id} game={game} />
+        <div
+          key={game.id || game.rawg_id}
+          className="col-6 col-md-4 col-lg-3 col-xl-2"
+        >
+          <GameCard game={game} />
+        </div>
       ))}
     </div>
   );

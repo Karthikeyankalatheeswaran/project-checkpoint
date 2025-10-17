@@ -38,65 +38,86 @@ export default function GameLogForm({ game, existingLog, onSuccess }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="border p-4 rounded-lg shadow space-y-3"
-    >
-      <h3 className="text-lg font-semibold">Log Your Play</h3>
+    <div className="custom-card p-4">
+      <h4 className="fw-bold mb-4" style={{ color: "#2c3e50" }}>
+        Log Your Play
+      </h4>
 
-      <div>
-        <label>Status:</label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="border p-1 rounded ml-2"
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-md-6 mb-3">
+            <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+              Status
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="form-select form-control-custom"
+            >
+              <option value="playing">Playing</option>
+              <option value="completed">Completed</option>
+              <option value="wishlist">Wishlist</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+
+          <div className="col-md-6 mb-3">
+            <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+              Hours Played
+            </label>
+            <input
+              type="number"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              className="form-control form-control-custom"
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+            Rating (out of 10)
+          </label>
+          <input
+            type="number"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+            className="form-control form-control-custom"
+            min="0"
+            max="10"
+            step="0.1"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label fw-bold" style={{ color: "#2c3e50" }}>
+            Review
+          </label>
+          <textarea
+            value={review}
+            onChange={(e) => setReview(e.target.value)}
+            className="form-control form-control-custom"
+            rows="4"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn btn-primary-custom btn-custom w-100 py-3 fw-bold"
         >
-          <option value="playing">Playing</option>
-          <option value="completed">Completed</option>
-          <option value="wishlist">Wishlist</option>
-          <option value="dropped">Dropped</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Hours Played:</label>
-        <input
-          type="number"
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          className="border p-1 rounded ml-2"
-        />
-      </div>
-
-      <div>
-        <label>Rating:</label>
-        <input
-          type="number"
-          value={rating}
-          onChange={(e) => setRating(e.target.value)}
-          className="border p-1 rounded ml-2"
-          min="0"
-          max="10"
-          step="0.1"
-        />
-      </div>
-
-      <div>
-        <label>Review:</label>
-        <textarea
-          value={review}
-          onChange={(e) => setReview(e.target.value)}
-          className="border p-1 rounded w-full"
-        ></textarea>
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        {existingLog ? "Update Log" : "Add Log"}
-      </button>
-    </form>
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2"></span>
+              {existingLog ? "Updating..." : "Adding..."}
+            </>
+          ) : existingLog ? (
+            "Update Log"
+          ) : (
+            "Add Log"
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

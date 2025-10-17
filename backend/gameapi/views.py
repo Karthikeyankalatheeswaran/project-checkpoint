@@ -49,13 +49,33 @@ def delete_game_log(request, log_id):
 @permission_classes([IsAuthenticated])
 def user_dashboard(request):
     status_filter = request.GET.get("status")  # optional filter: playing, completed, wishlist
+    page = request.GET.get("page", 1)
+    
+    try:
+        page = int(page)
+        if page < 1:
+            page = 1
+    except (ValueError, TypeError):
+        page = 1
+        
     user_logs = GameLog.objects.filter(user=request.user)
 
     if status_filter:
         user_logs = user_logs.filter(status=status_filter)
 
-    serializer = GameLogSerializer(user_logs, many=True)
-    return Response({"logs": serializer.data})
+    # Add pagination for dashboard
+    page_size = 12  # Match your frontend requirement
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    paginated_logs = user_logs[start_index:end_index]
+
+    serializer = GameLogSerializer(paginated_logs, many=True)
+    return Response({
+        "logs": serializer.data,
+        "total_logs": user_logs.count(),
+        "total_pages": (user_logs.count() + page_size - 1) // page_size,
+        "current_page": page
+    })
 
 
 @api_view(["GET"])
@@ -63,14 +83,33 @@ def user_dashboard(request):
 def search_games(request):
     query = request.GET.get("q", "")  # default empty string
     page = request.GET.get("page", 1)
+    
+    try:
+        page = int(page)
+        if page < 1:
+            page = 1
+    except (ValueError, TypeError):
+        page = 1
 
-    # Check DB first
-    games = Game.objects.all()  # just return all games if no query
+    # Check DB first - add pagination here too
+    games = Game.objects.all()
     if games.exists() and not query:
-        serializer = GameSerializer(games, many=True)
-        return Response({"results": serializer.data, "source": "db"})
+        # Add basic pagination for DB results
+        page_size = 20  # Match RAWG API page size
+        start_index = (page - 1) * page_size
+        end_index = start_index + page_size
+        paginated_games = games[start_index:end_index]
+        
+        serializer = GameSerializer(paginated_games, many=True)
+        return Response({
+            "results": serializer.data, 
+            "source": "db",
+            "count": games.count(),
+            "total_pages": (games.count() + page_size - 1) // page_size,
+            "current_page": page
+        })
 
-    # Fetch from RAWG
+    # Fetch from RAWG with proper page parameter
     data = get_games(search_query=query, page=page)
     results = []
 
@@ -86,7 +125,18 @@ def search_games(request):
         )
         results.append(GameSerializer(game).data)
 
-    return Response({"results": results, "source": "rawg"})
+    # Preserve RAWG pagination info
+    response_data = {
+        "results": results, 
+        "source": "rawg",
+        "count": data.get("count", 0),
+        "next": data.get("next"),
+        "previous": data.get("previous"),
+        "total_pages": data.get("total_pages", 1),
+        "current_page": page
+    }
+    
+    return Response(response_data)
 
 
 @api_view(["POST"])
@@ -175,6 +225,14 @@ def log_game(request):
 def games_list(request):
     search = request.GET.get("search")
     page = request.GET.get("page", 1)
+    
+    try:
+        page = int(page)
+        if page < 1:
+            page = 1
+    except (ValueError, TypeError):
+        page = 1
+        
     data = get_games(search_query=search, page=page)
     return Response(data)
 
