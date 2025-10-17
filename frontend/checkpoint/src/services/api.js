@@ -83,20 +83,18 @@ export const getGameDetail = async (rawg_id) => {
 
 export const logGame = async (data) => {
   try {
-    const res = await api.post("log-game/", data, {
-      headers: getAuthHeaders(),
-    });
+    const res = await api.post("log-game/", data);
     return res.data;
   } catch (err) {
     console.error("Log game error:", err.response || err);
-    return null;
+    throw err;
   }
 };
 
 export const getDashboard = async (status) => {
   try {
     const url = status ? `dashboard/?status=${status}` : "dashboard/";
-    const res = await api.get(url, { headers: getAuthHeaders() });
+    const res = await api.get(url);
     return res.data;
   } catch (err) {
     console.error("Dashboard fetch error:", err.response || err);
@@ -119,25 +117,149 @@ export const getGameLog = async (rawg_id) => {
 // Edit a game log
 export const editGameLog = async (log_id, data) => {
   try {
-    const res = await api.put(`log-game/${log_id}/edit/`, data, {
-      headers: getAuthHeaders(),
-    });
+    const res = await api.put(`log-game/${log_id}/edit/`, data);
     return res.data;
   } catch (err) {
     console.error("Edit game log error:", err.response || err);
-    return null;
+    throw err;
   }
 };
 
 // Delete a game log
 export const deleteGameLog = async (log_id) => {
   try {
-    const res = await api.delete(`log-game/${log_id}/delete/`, {
-      headers: getAuthHeaders(),
-    });
+    const res = await api.delete(`log-game/${log_id}/delete/`);
     return res.data;
   } catch (err) {
     console.error("Delete game log error:", err.response || err);
-    return null;
+    throw err;
+  }
+};
+
+// --- User Profile APIs ---
+export const getUserProfile = async (username = null) => {
+  try {
+    const url = username ? `profile/${username}/` : "profile/";
+    const res = await api.get(url);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching user profile:", err.response || err);
+    throw err;
+  }
+};
+
+export const updateUserProfile = async (profileData) => {
+  try {
+    const res = await api.put("profile/update/", profileData);
+    return res.data;
+  } catch (err) {
+    console.error("Error updating user profile:", err.response || err);
+    throw err;
+  }
+};
+
+export const getUserGameLogs = async (username, status = "") => {
+  try {
+    const url = status
+      ? `profile/${username}/logs/?status=${status}`
+      : `profile/${username}/logs/`;
+    const res = await api.get(url);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching user game logs:", err.response || err);
+    throw err;
+  }
+};
+
+// --- Friends System APIs ---
+export const searchUsers = async (query) => {
+  try {
+    if (!query || query.trim().length < 2) {
+      return { users: [] };
+    }
+    const res = await api.get(
+      `friends/search/?q=${encodeURIComponent(query.trim())}`
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error searching users:", err.response || err);
+    // Return empty results instead of throwing for better UX
+    return { users: [] };
+  }
+};
+
+export const sendFriendRequest = async (username) => {
+  try {
+    const res = await api.post(`friends/send-request/${username}/`);
+    return res.data;
+  } catch (err) {
+    console.error("Error sending friend request:", err.response || err);
+    throw err;
+  }
+};
+
+export const acceptFriendRequest = async (friendshipId) => {
+  try {
+    const res = await api.post(`friends/accept-request/${friendshipId}/`);
+    return res.data;
+  } catch (err) {
+    console.error("Error accepting friend request:", err.response || err);
+    throw err;
+  }
+};
+
+export const rejectFriendRequest = async (friendshipId) => {
+  try {
+    const res = await api.post(`friends/reject-request/${friendshipId}/`);
+    return res.data;
+  } catch (err) {
+    console.error("Error rejecting friend request:", err.response || err);
+    throw err;
+  }
+};
+
+export const removeFriend = async (username) => {
+  try {
+    const res = await api.delete(`friends/remove/${username}/`);
+    return res.data;
+  } catch (err) {
+    console.error("Error removing friend:", err.response || err);
+    throw err;
+  }
+};
+
+export const getFriends = async () => {
+  try {
+    const res = await api.get("friends/");
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching friends:", err.response || err);
+    // Return empty friends array instead of throwing
+    return { friends: [] };
+  }
+};
+
+export const getPendingRequests = async () => {
+  try {
+    const res = await api.get("friends/pending/");
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching pending requests:", err.response || err);
+    // Return empty pending requests instead of throwing
+    return { pending_requests: [] };
+  }
+};
+
+export const getFriendStatus = async (username) => {
+  try {
+    const res = await api.get(`friends/status/${username}/`);
+    return res.data;
+  } catch (err) {
+    // If endpoint doesn't exist or returns error, assume not friends
+    if (err.response?.status === 404) {
+      return { status: "not_friends" };
+    }
+    console.error("Error fetching friend status:", err.response || err);
+    return { status: "not_friends" };
   }
 };

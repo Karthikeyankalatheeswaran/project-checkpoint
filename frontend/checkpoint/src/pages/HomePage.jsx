@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const [games, setGames] = useState([]);
   const [franchiseGames, setFranchiseGames] = useState([]);
+  const [creatorGames, setCreatorGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [franchiseLoading, setFranchiseLoading] = useState(true);
+  const [creatorLoading, setCreatorLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
@@ -29,14 +31,13 @@ export default function HomePage() {
     const fetchFranchiseGames = async () => {
       setFranchiseLoading(true);
       try {
-        // Fetch games from popular franchises
         const franchises = [
-          "assassin's creed",
-          "call of duty",
-          "grand theft auto",
-          "the witcher",
-          "final fantasy",
-          "elder scrolls",
+          "assassin's creed 2",
+          "call of duty modern warfare",
+          "grand theft auto v",
+          "the witcher 3",
+          "final fantasy 7 remake",
+          "elder scrolls v skyrim",
         ];
         const franchiseResults = [];
 
@@ -44,7 +45,7 @@ export default function HomePage() {
           try {
             const data = await searchGames(franchise, 1);
             if (data.results && data.results.length > 0) {
-              franchiseResults.push(data.results[0]); // Get first result from each franchise
+              franchiseResults.push(data.results[0]);
             }
           } catch (err) {
             console.error(`Error fetching ${franchise}:`, err);
@@ -59,9 +60,63 @@ export default function HomePage() {
       }
     };
 
+    const fetchCreatorGames = async () => {
+      setCreatorLoading(true);
+      try {
+        const creatorGameTitles = [
+          "The Last of Us",
+          "Silent Hill 2 Remake",
+          "Red Dead Redemption 2",
+          "Assassin's Creed 4 Black Flag",
+          "Elden Ring",
+          "Persona 5",
+          "God of War 2018",
+          "Final Fantasy VII",
+        ];
+
+        const creatorGameResults = [];
+
+        for (const title of creatorGameTitles) {
+          try {
+            const data = await searchGames(title, 1);
+            if (data.results && data.results.length > 0) {
+              creatorGameResults.push({
+                ...data.results[0],
+                inspiration: getInspirationQuote(title),
+              });
+            }
+          } catch (err) {
+            console.error(`Error fetching ${title}:`, err);
+          }
+        }
+
+        setCreatorGames(creatorGameResults);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setCreatorLoading(false);
+      }
+    };
+
     fetchGames();
     fetchFranchiseGames();
+    fetchCreatorGames();
   }, [page]);
+
+  const getInspirationQuote = (gameTitle) => {
+    const quotes = {
+      "The Last of Us": "Redefined narrative depth in games",
+      "Silent Hill 2 Remake": "Mastered psychological horror",
+      "Red Dead Redemption 2": "Demonstrated immersive world-building",
+      "Assassin's Creed 4 Black Flag":
+        "Brought open-world exploration to new heights",
+      "Elden Ring": "Revolutionized open-world RPG design",
+      "Persona 5": "Inspired social and time management tracking",
+      "God of War 2018": "Showcased emotional storytelling in gaming",
+      "Final Fantasy VII": "The RPG that started it all",
+    };
+    return quotes[gameTitle] || "Inspired Checkpoint's development";
+  };
 
   if (loading)
     return (
@@ -97,11 +152,11 @@ export default function HomePage() {
       style={{ backgroundColor: "#f8f9fa" }}
     >
       <div className="container py-5">
-        {/* Creator Info Section - Moved to Top */}
+        {/* Creator's Gaming Journey Section */}
         <div className="row mb-5">
           <div className="col-12">
             <div className="custom-card p-5 position-relative overflow-hidden">
-              {/* Background Decorative Elements */}
+              {/* Background Elements */}
               <div
                 className="position-absolute top-0 end-0 opacity-5"
                 style={{
@@ -140,7 +195,7 @@ export default function HomePage() {
                     >
                       🎮
                     </div>
-                    {/* Floating elements around the avatar */}
+                    {/* Gaming Stats */}
                     <div
                       className="position-absolute rounded-pill d-flex align-items-center justify-content-center"
                       style={{
@@ -156,7 +211,7 @@ export default function HomePage() {
                         transform: "rotate(15deg)",
                       }}
                     >
-                      Since 2018
+                      Since 1998
                     </div>
                     <div
                       className="position-absolute rounded-pill d-flex align-items-center justify-content-center"
@@ -173,11 +228,11 @@ export default function HomePage() {
                         transform: "rotate(-10deg)",
                       }}
                     >
-                      Level 99
+                      500+ Games
                     </div>
                   </div>
 
-                  {/* Stats below avatar */}
+                  {/* Quick Stats */}
                   <div className="row mt-4 g-3">
                     <div className="col-4">
                       <div className="text-center">
@@ -185,7 +240,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#3498db" }}
                         >
-                          5K+
+                          25+
                         </div>
                         <div
                           style={{
@@ -194,7 +249,7 @@ export default function HomePage() {
                             fontWeight: "500",
                           }}
                         >
-                          Games
+                          Years Gaming
                         </div>
                       </div>
                     </div>
@@ -204,7 +259,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#9b59b6" }}
                         >
-                          10K+
+                          150+
                         </div>
                         <div
                           style={{
@@ -213,7 +268,7 @@ export default function HomePage() {
                             fontWeight: "500",
                           }}
                         >
-                          Gamers
+                          Completed
                         </div>
                       </div>
                     </div>
@@ -223,7 +278,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#27ae60" }}
                         >
-                          50K+
+                          2K+
                         </div>
                         <div
                           style={{
@@ -232,7 +287,7 @@ export default function HomePage() {
                             fontWeight: "500",
                           }}
                         >
-                          Reviews
+                          Hours
                         </div>
                       </div>
                     </div>
@@ -252,10 +307,10 @@ export default function HomePage() {
                           fontWeight: "600",
                         }}
                       >
-                        Founder's Story
+                        Creator's Journey
                       </div>
                       <div className="text-muted small">
-                        <i className="bi bi-clock me-1"></i>5 min read
+                        <i className="bi bi-controller me-1"></i>Lifetime Gamer
                       </div>
                     </div>
 
@@ -263,7 +318,7 @@ export default function HomePage() {
                       className="fw-bold mb-4 display-5"
                       style={{ color: "#2c3e50", lineHeight: "1.2" }}
                     >
-                      Building the Ultimate{" "}
+                      From Player to{" "}
                       <span
                         style={{
                           background:
@@ -272,7 +327,7 @@ export default function HomePage() {
                           WebkitTextFillColor: "transparent",
                         }}
                       >
-                        Gaming Companion
+                        Creator
                       </span>
                     </h2>
 
@@ -285,13 +340,12 @@ export default function HomePage() {
                           marginBottom: "1.5rem",
                         }}
                       >
-                        Welcome to{" "}
-                        <strong style={{ color: "#2c3e50" }}>Checkpoint</strong>{" "}
-                        - where passion for gaming meets innovative technology.
-                        As a lifelong gamer and developer, I noticed a gap in
-                        how we track and share our gaming journeys. Traditional
-                        methods felt disconnected, and modern platforms lacked
-                        the personal touch gamers deserve.
+                        My gaming journey began with a Nintendo 64 and has
+                        evolved through every generation since. From mastering{" "}
+                        <strong>Ocarina of Time</strong>
+                        to getting lost in <strong>The Witcher 3</strong>, each
+                        game shaped my understanding of what makes gaming
+                        magical.
                       </p>
 
                       <p
@@ -302,16 +356,15 @@ export default function HomePage() {
                           marginBottom: "1.5rem",
                         }}
                       >
-                        What began as handwritten notes in gaming journals has
-                        evolved into a sophisticated platform that celebrates
-                        every achievement, every completed quest, and every
-                        memorable gaming moment. We're not just tracking games;
-                        we're preserving stories and building a community of
-                        passionate gamers.
+                        Checkpoint was born from countless notebooks filled with
+                        game progress, hand-drawn maps, and the realization that
+                        our gaming stories deserve to be preserved and shared.
+                        It's the platform I wish I had during my 25+ years of
+                        gaming.
                       </p>
                     </div>
 
-                    {/* Mission Statement */}
+                    {/* Gaming Philosophy */}
                     <div
                       className="custom-card p-4 mb-4"
                       style={{
@@ -325,29 +378,27 @@ export default function HomePage() {
                           className="me-3 mt-1"
                           style={{ color: "#3498db", fontSize: "1.5rem" }}
                         >
-                          💎
+                          💭
                         </div>
                         <div>
                           <h6
                             className="fw-bold mb-2"
                             style={{ color: "#2c3e50" }}
                           >
-                            Our Mission
+                            Gaming Philosophy
                           </h6>
                           <p
                             className="mb-0"
                             style={{ color: "#5d6d7e", fontSize: "0.95rem" }}
                           >
-                            To create the most comprehensive and intuitive
-                            gaming companion that helps players track progress,
-                            discover new adventures, and connect with fellow
-                            gamers worldwide.
+                            "Every game tells a story, and every player's
+                            journey is unique. We're not just tracking
+                            progress—we're preserving memories."
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Call to Action */}
                     <div className="d-flex flex-wrap gap-3 align-items-center">
                       <button
                         className="btn fw-bold px-4 py-3 rounded-3 d-flex align-items-center"
@@ -367,6 +418,7 @@ export default function HomePage() {
                           e.target.style.transform = "translateY(0)";
                           e.target.style.boxShadow = "none";
                         }}
+                        onClick={() => navigate("/dashboard")}
                       >
                         <i className="bi bi-joystick me-2"></i>
                         Start Your Journey
@@ -388,9 +440,14 @@ export default function HomePage() {
                           e.target.style.background = "transparent";
                           e.target.style.color = "#3498db";
                         }}
+                        onClick={() =>
+                          document
+                            .getElementById("creator-games")
+                            .scrollIntoView({ behavior: "smooth" })
+                        }
                       >
-                        <i className="bi bi-play-circle me-2"></i>
-                        Watch Story
+                        <i className="bi bi-heart me-2"></i>
+                        See My Inspirations
                       </button>
                     </div>
                   </div>
@@ -400,7 +457,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Why Checkpoint Section */}
+        {/* Why Choose Checkpoint Section */}
         <div className="row mb-5">
           <div className="col-12 text-center mb-4">
             <h2 className="fw-bold mb-3" style={{ color: "#2c3e50" }}>
@@ -421,7 +478,8 @@ export default function HomePage() {
               </h5>
               <p style={{ color: "#7f8c8d" }}>
                 Monitor your gaming hours, achievements, and completion status
-                across all your favorite games.
+                across all your favorite games. Never lose track of your gaming
+                journey.
               </p>
             </div>
           </div>
@@ -436,7 +494,7 @@ export default function HomePage() {
               </h5>
               <p style={{ color: "#7f8c8d" }}>
                 Share your thoughts with the community and discover new games
-                through authentic player reviews.
+                through authentic player reviews. Your voice matters.
               </p>
             </div>
           </div>
@@ -451,13 +509,117 @@ export default function HomePage() {
               </h5>
               <p style={{ color: "#7f8c8d" }}>
                 Explore thousands of games, filter by platform, genre, and find
-                your next gaming adventure.
+                your next gaming adventure. Your next favorite game awaits.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Franchise Games Section */}
+        {/* Creator's Inspirational Games */}
+        <div id="creator-games" className="row mb-5">
+          <div className="col-12">
+            <div className="text-center mb-4">
+              <h2 className="fw-bold mb-3" style={{ color: "#2c3e50" }}>
+                Games That Inspired Checkpoint
+              </h2>
+              <p style={{ color: "#7f8c8d", fontSize: "1.1rem" }}>
+                These masterpieces shaped the vision for our gaming companion
+              </p>
+            </div>
+
+            {creatorLoading ? (
+              <div className="row g-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div
+                      className="custom-card skeleton-loader"
+                      style={{ height: "320px", borderRadius: "12px" }}
+                    ></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="row g-4">
+                {creatorGames.map((game) => (
+                  <div
+                    key={game.id || game.rawg_id}
+                    className="col-12 col-md-6 col-lg-4 col-xl-3"
+                  >
+                    <div
+                      className="custom-card h-100"
+                      onClick={() =>
+                        navigate(`/game/${game.rawg_id || game.id}`)
+                      }
+                      style={{
+                        cursor: "pointer",
+                        height: "320px",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <img
+                        src={
+                          game.background_image ||
+                          "https://via.placeholder.com/400x225?text=No+Image"
+                        }
+                        alt={game.name}
+                        className="w-100"
+                        style={{
+                          height: "160px",
+                          objectFit: "cover",
+                          borderTopLeftRadius: "12px",
+                          borderTopRightRadius: "12px",
+                        }}
+                      />
+                      <div className="card-body d-flex flex-column p-3">
+                        <h6
+                          className="fw-bold mb-2 line-clamp-2"
+                          style={{
+                            color: "#2c3e50",
+                            fontSize: "0.9rem",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            minHeight: "40px",
+                          }}
+                        >
+                          {game.name}
+                        </h6>
+
+                        <p
+                          className="small mb-2"
+                          style={{
+                            color: "#3498db",
+                            fontStyle: "italic",
+                            fontSize: "0.8rem",
+                          }}
+                        >
+                          {game.inspiration}
+                        </p>
+
+                        <div className="mt-auto">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="badge bg-warning text-dark px-2 py-1 rounded-pill small">
+                              ⭐ {game.rating ? game.rating.toFixed(1) : "N/A"}
+                            </span>
+                            <span className="text-muted small">
+                              {game.released
+                                ? new Date(game.released).getFullYear()
+                                : "TBA"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Iconic Franchises Section */}
         <div className="row mb-5">
           <div className="col-12">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -469,25 +631,6 @@ export default function HomePage() {
                   Explore games from legendary gaming franchises
                 </p>
               </div>
-              <button
-                className="btn fw-bold px-4 py-2 rounded-3"
-                style={{
-                  background: "transparent",
-                  color: "#3498db",
-                  border: "2px solid #3498db",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.background = "#3498db";
-                  e.target.style.color = "white";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.background = "transparent";
-                  e.target.style.color = "#3498db";
-                }}
-              >
-                View All Franchises
-              </button>
             </div>
 
             {franchiseLoading ? (
@@ -505,12 +648,14 @@ export default function HomePage() {
               <div className="row g-4">
                 {franchiseGames.map((game) => (
                   <div
-                    key={game.rawg_id}
+                    key={game.id || game.rawg_id}
                     className="col-12 col-md-6 col-lg-4 col-xl-2"
                   >
                     <div
                       className="custom-card h-100"
-                      onClick={() => navigate(`/game/${game.rawg_id}`)}
+                      onClick={() =>
+                        navigate(`/game/${game.rawg_id || game.id}`)
+                      }
                       style={{
                         cursor: "pointer",
                         height: "280px",
@@ -597,14 +742,16 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="row g-4">
-                {games.map((g) => (
+                {games.map((game) => (
                   <div
-                    key={g.rawg_id}
+                    key={game.id || game.rawg_id}
                     className="col-12 col-md-6 col-lg-4 col-xl-3 mb-4"
                   >
                     <div
                       className="custom-card h-100"
-                      onClick={() => navigate(`/game/${g.rawg_id}`)}
+                      onClick={() =>
+                        navigate(`/game/${game.rawg_id || game.id}`)
+                      }
                       style={{
                         cursor: "pointer",
                         height: "380px",
@@ -619,10 +766,10 @@ export default function HomePage() {
                       >
                         <img
                           src={
-                            g.background_image ||
+                            game.background_image ||
                             "https://via.placeholder.com/400x225?text=No+Image"
                           }
-                          alt={g.name}
+                          alt={game.name}
                           className="w-100"
                           style={{
                             height: "225px",
@@ -641,7 +788,7 @@ export default function HomePage() {
                               fontSize: "0.8rem",
                             }}
                           >
-                            {g.rating ? g.rating.toFixed(1) : "N/A"}
+                            {game.rating ? game.rating.toFixed(1) : "N/A"}
                           </span>
                         </div>
                       </div>
@@ -663,7 +810,7 @@ export default function HomePage() {
                             lineHeight: "1.3",
                           }}
                         >
-                          {g.name}
+                          {game.name}
                         </h6>
 
                         <div className="mt-auto">
@@ -673,20 +820,20 @@ export default function HomePage() {
                               style={{ color: "#7f8c8d" }}
                             >
                               <i className="bi bi-calendar3 me-1"></i>
-                              {g.released
-                                ? new Date(g.released).getFullYear()
+                              {game.released
+                                ? new Date(game.released).getFullYear()
                                 : "TBA"}
                             </p>
                             <p
                               className="small fw-bold mb-0"
                               style={{ color: "#f39c12" }}
                             >
-                              ⭐ {g.rating || "N/A"}
+                              ⭐ {game.rating || "N/A"}
                             </p>
                           </div>
 
                           {/* Platforms (if available) */}
-                          {g.platforms && (
+                          {game.platforms && (
                             <div className="mt-2">
                               <p
                                 className="small fw-bold mb-1"
@@ -695,7 +842,7 @@ export default function HomePage() {
                                 Platforms:
                               </p>
                               <div className="d-flex flex-wrap gap-1">
-                                {g.platforms
+                                {game.platforms
                                   .slice(0, 3)
                                   .map((platform, index) => (
                                     <span
@@ -706,12 +853,12 @@ export default function HomePage() {
                                       {platform.platform.name}
                                     </span>
                                   ))}
-                                {g.platforms.length > 3 && (
+                                {game.platforms.length > 3 && (
                                   <span
                                     className="badge bg-light text-dark px-2 py-1 rounded"
                                     style={{ fontSize: "0.7rem" }}
                                   >
-                                    +{g.platforms.length - 3}
+                                    +{game.platforms.length - 3}
                                   </span>
                                 )}
                               </div>
@@ -816,7 +963,7 @@ export default function HomePage() {
         
         .custom-card {
           border: none;
-          border-radius: 16px;
+          border-radius: "16px";
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
           transition: all 0.3s ease;
           background: white;

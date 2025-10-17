@@ -32,21 +32,17 @@ export default function Navbar() {
           to="/"
           style={{ color: "#2c3e50", fontSize: "1.5rem" }}
         >
-          <div
-            className="me-2"
-            style={{
-              width: "32px",
-              height: "32px",
-              background: "linear-gradient(135deg, #3498db, #9b59b6)",
-              borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "14px",
-            }}
-          ></div>
+          <div className="me-2">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/686/686589.png"
+              alt="Checkpoint"
+              style={{
+                width: "32px",
+                height: "32px",
+                objectFit: "contain",
+              }}
+            />
+          </div>
           Checkpoint
         </Link>
 
@@ -76,26 +72,62 @@ export default function Navbar() {
                   (e.target.style.backgroundColor = "transparent")
                 }
               >
+                <i className="bi bi-house me-2"></i>
                 Home
               </Link>
             </li>
 
             {user && (
-              <li className="nav-item">
-                <Link
-                  className="nav-link fw-bold px-3 py-2 rounded-3"
-                  to="/dashboard"
-                  style={{ color: "#2c3e50", transition: "all 0.3s ease" }}
-                  onMouseOver={(e) =>
-                    (e.target.style.backgroundColor = "#f8f9fa")
-                  }
-                  onMouseOut={(e) =>
-                    (e.target.style.backgroundColor = "transparent")
-                  }
-                >
-                  My Logs
-                </Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold px-3 py-2 rounded-3"
+                    to="/dashboard"
+                    style={{ color: "#2c3e50", transition: "all 0.3s ease" }}
+                    onMouseOver={(e) =>
+                      (e.target.style.backgroundColor = "#f8f9fa")
+                    }
+                    onMouseOut={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
+                  >
+                    <i className="bi bi-joystick me-2"></i>
+                    My Logs
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold px-3 py-2 rounded-3"
+                    to="/friends/search"
+                    style={{ color: "#2c3e50", transition: "all 0.3s ease" }}
+                    onMouseOver={(e) =>
+                      (e.target.style.backgroundColor = "#f8f9fa")
+                    }
+                    onMouseOut={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
+                  >
+                    <i className="bi bi-people me-2"></i>
+                    Find Friends
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold px-3 py-2 rounded-3"
+                    to={`/profile/${user.name}`}
+                    style={{ color: "#2c3e50", transition: "all 0.3s ease" }}
+                    onMouseOver={(e) =>
+                      (e.target.style.backgroundColor = "#f8f9fa")
+                    }
+                    onMouseOut={(e) =>
+                      (e.target.style.backgroundColor = "transparent")
+                    }
+                  >
+                    <i className="bi bi-person me-2"></i>
+                    My Profile
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
 
@@ -149,39 +181,122 @@ export default function Navbar() {
             {user ? (
               <>
                 <li className="nav-item me-3 my-auto">
-                  <span
-                    className="fw-bold d-flex align-items-center px-3 py-2 rounded-3"
-                    style={{
-                      color: "#2c3e50",
-                      background: "#f8f9fa",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    <i className="bi bi-person-circle me-2"></i>
-                    {user.name}
-                  </span>
-                </li>
-                <li className="nav-item">
-                  <button
-                    className="btn fw-bold px-4 py-2 rounded-3"
-                    onClick={handleLogout}
-                    style={{
-                      background: "transparent",
-                      color: "#e74c3c",
-                      border: "2px solid #e74c3c",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.background = "#e74c3c";
-                      e.target.style.color = "white";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.background = "transparent";
-                      e.target.style.color = "#e74c3c";
-                    }}
-                  >
-                    Logout
-                  </button>
+                  <div className="dropdown">
+                    <button
+                      className="btn fw-bold d-flex align-items-center px-3 py-2 rounded-3 dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      style={{
+                        color: "#2c3e50",
+                        background: "#f8f9fa",
+                        fontSize: "0.9rem",
+                        border: "none",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.background = "#e9ecef";
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.background = "#f8f9fa";
+                      }}
+                    >
+                      <i className="bi bi-person-circle me-2"></i>
+                      {user.name}
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
+                      <li>
+                        <Link
+                          className="dropdown-item d-flex align-items-center py-2 rounded-2"
+                          to={`/profile/${user.name}`}
+                          style={{
+                            color: "#2c3e50",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.background = "#f8f9fa";
+                            e.target.style.color = "#3498db";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.background = "transparent";
+                            e.target.style.color = "#2c3e50";
+                          }}
+                        >
+                          <i className="bi bi-person me-2"></i>
+                          View Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item d-flex align-items-center py-2 rounded-2"
+                          to="/dashboard"
+                          style={{
+                            color: "#2c3e50",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.background = "#f8f9fa";
+                            e.target.style.color = "#3498db";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.background = "transparent";
+                            e.target.style.color = "#2c3e50";
+                          }}
+                        >
+                          <i className="bi bi-joystick me-2"></i>
+                          My Game Logs
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item d-flex align-items-center py-2 rounded-2"
+                          to="/friends/search"
+                          style={{
+                            color: "#2c3e50",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.background = "#f8f9fa";
+                            e.target.style.color = "#3498db";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.background = "transparent";
+                            e.target.style.color = "#2c3e50";
+                          }}
+                        >
+                          <i className="bi bi-people me-2"></i>
+                          Find Friends
+                        </Link>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item d-flex align-items-center py-2 rounded-2"
+                          onClick={handleLogout}
+                          style={{
+                            color: "#e74c3c",
+                            transition: "all 0.3s ease",
+                            border: "none",
+                            background: "transparent",
+                            width: "100%",
+                            textAlign: "left",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.background = "#f8f9fa";
+                            e.target.style.color = "#c0392b";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.background = "transparent";
+                            e.target.style.color = "#e74c3c";
+                          }}
+                        >
+                          <i className="bi bi-box-arrow-right me-2"></i>
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </>
             ) : (
@@ -206,6 +321,7 @@ export default function Navbar() {
                       e.target.style.color = "#3498db";
                     }}
                   >
+                    <i className="bi bi-box-arrow-in-right me-2"></i>
                     Login
                   </Link>
                 </li>
@@ -230,6 +346,7 @@ export default function Navbar() {
                       e.target.style.boxShadow = "none";
                     }}
                   >
+                    <i className="bi bi-person-plus me-2"></i>
                     Register
                   </Link>
                 </li>
@@ -253,6 +370,15 @@ export default function Navbar() {
         .form-control:focus {
           border-color: #3498db;
           box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.1);
+        }
+        
+        .dropdown-menu {
+          min-width: 200px;
+          border: 1px solid #e9ecef;
+        }
+        
+        .dropdown-item {
+          font-weight: 500;
         }
       `}</style>
     </nav>

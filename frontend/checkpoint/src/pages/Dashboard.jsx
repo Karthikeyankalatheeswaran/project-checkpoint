@@ -7,6 +7,7 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedLog, setSelectedLog] = useState(null);
   const [editData, setEditData] = useState({});
+  const [viewMode, setViewMode] = useState("tile"); // "tile" or "list"
 
   const fetchLogs = async (status = "") => {
     setLoading(true);
@@ -88,6 +89,354 @@ export default function Dashboard() {
       .length;
   };
 
+  // List View Component
+  const ListView = () => (
+    <div className="row">
+      <div className="col-12">
+        <div className="custom-card">
+          <div className="table-responsive">
+            <table className="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>Game</th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>
+                    Status
+                  </th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>
+                    Platform
+                  </th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>Hours</th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>
+                    Rating
+                  </th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>
+                    Review
+                  </th>
+                  <th style={{ color: "#2c3e50", fontWeight: "600" }}>
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {logs.map((log) => {
+                  const statusConfig = getStatusBadge(log.status);
+                  return (
+                    <tr
+                      key={log.id}
+                      className="custom-list-row"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleCardClick(log)}
+                    >
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={
+                              log.game.background_image ||
+                              "https://via.placeholder.com/400x225?text=No+Image"
+                            }
+                            alt={log.game.name}
+                            className="rounded me-3"
+                            style={{
+                              width: "60px",
+                              height: "45px",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <div>
+                            <div
+                              style={{ color: "#2c3e50", fontWeight: "600" }}
+                            >
+                              {log.game.name}
+                            </div>
+                            <small style={{ color: "#7f8c8d" }}>
+                              {log.game.released
+                                ? new Date(log.game.released).getFullYear()
+                                : "TBA"}
+                            </small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span
+                          className="badge fw-bold px-3 py-2 rounded-pill"
+                          style={{
+                            background: statusConfig.bg,
+                            color: statusConfig.text,
+                            fontSize: "0.8rem",
+                          }}
+                        >
+                          {log.status}
+                        </span>
+                      </td>
+                      <td style={{ color: "#2c3e50", fontWeight: "500" }}>
+                        {log.platform || "-"}
+                      </td>
+                      <td style={{ color: "#2c3e50", fontWeight: "600" }}>
+                        {log.hours_played || 0}
+                      </td>
+                      <td>
+                        {log.rating ? (
+                          <span style={{ color: "#f39c12", fontWeight: "600" }}>
+                            <i className="bi bi-star-fill me-1"></i>
+                            {log.rating}
+                          </span>
+                        ) : (
+                          <span style={{ color: "#7f8c8d" }}>N/A</span>
+                        )}
+                      </td>
+                      <td>
+                        {log.review ? (
+                          <div
+                            className="line-clamp-1"
+                            style={{
+                              color: "#7f8c8d",
+                              fontStyle: "italic",
+                              maxWidth: "200px",
+                            }}
+                            title={log.review}
+                          >
+                            "{log.review}"
+                          </div>
+                        ) : (
+                          <span style={{ color: "#7f8c8d" }}>-</span>
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(log.id);
+                          }}
+                          className="btn btn-sm d-flex align-items-center justify-content-center"
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            background: "rgba(231, 76, 60, 0.9)",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "8px",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.background = "#e74c3c";
+                            e.target.style.transform = "scale(1.1)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.background =
+                              "rgba(231, 76, 60, 0.9)";
+                            e.target.style.transform = "scale(1)";
+                          }}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tile View Component (your original grid view)
+  const TileView = () => (
+    <div className="row">
+      {logs.map((log) => {
+        const statusConfig = getStatusBadge(log.status);
+        return (
+          <div key={log.id} className="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+            <div
+              className="custom-card h-100"
+              style={{
+                cursor: "pointer",
+                height: "380px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {/* Game Image */}
+              <div
+                className="position-relative overflow-hidden"
+                style={{ flex: "0 0 auto" }}
+              >
+                <img
+                  src={
+                    log.game.background_image ||
+                    "https://via.placeholder.com/400x225?text=No+Image"
+                  }
+                  alt={log.game.name}
+                  className="w-100"
+                  style={{
+                    height: "180px",
+                    objectFit: "cover",
+                    borderTopLeftRadius: "16px",
+                    borderTopRightRadius: "16px",
+                  }}
+                  onClick={() => handleCardClick(log)}
+                />
+                <div className="position-absolute top-0 end-0 m-2">
+                  <span
+                    className="badge fw-bold px-3 py-2 rounded-pill"
+                    style={{
+                      background: statusConfig.bg,
+                      color: statusConfig.text,
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    {log.status}
+                  </span>
+                </div>
+                <div className="position-absolute top-0 start-0 m-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(log.id);
+                    }}
+                    className="btn btn-sm d-flex align-items-center justify-content-center rounded-circle"
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      background: "rgba(231, 76, 60, 0.9)",
+                      color: "white",
+                      border: "none",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.background = "#e74c3c";
+                      e.target.style.transform = "scale(1.1)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.background = "rgba(231, 76, 60, 0.9)";
+                      e.target.style.transform = "scale(1)";
+                    }}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+
+              {/* Game Info */}
+              <div
+                className="card-body d-flex flex-column p-4"
+                style={{ flex: "1 1 auto" }}
+                onClick={() => handleCardClick(log)}
+              >
+                <h6
+                  className="card-title fw-bold mb-3 line-clamp-2"
+                  style={{
+                    color: "#2c3e50",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    minHeight: "48px",
+                    lineHeight: "1.3",
+                  }}
+                >
+                  {log.game.name}
+                </h6>
+
+                <div className="mt-auto">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div className="text-center">
+                      <div
+                        className="fw-bold"
+                        style={{ color: "#2c3e50", fontSize: "1.1rem" }}
+                      >
+                        {log.hours_played || 0}
+                      </div>
+                      <div
+                        style={{
+                          color: "#7f8c8d",
+                          fontSize: "0.8rem",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Hours
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <div
+                        className="fw-bold d-flex align-items-center justify-content-center"
+                        style={{ color: "#f39c12", fontSize: "1.1rem" }}
+                      >
+                        <i className="bi bi-star-fill me-1"></i>
+                        {log.rating || "N/A"}
+                      </div>
+                      <div
+                        style={{
+                          color: "#7f8c8d",
+                          fontSize: "0.8rem",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Rating
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <div
+                        className="fw-bold"
+                        style={{ color: "#2c3e50", fontSize: "1.1rem" }}
+                      >
+                        {log.game.released
+                          ? new Date(log.game.released).getFullYear()
+                          : "TBA"}
+                      </div>
+                      <div
+                        style={{
+                          color: "#7f8c8d",
+                          fontSize: "0.8rem",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Released
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Review Preview */}
+                  {log.review && (
+                    <div className="mt-3">
+                      <p
+                        className="small mb-0 line-clamp-2"
+                        style={{
+                          color: "#7f8c8d",
+                          fontStyle: "italic",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        "{log.review}"
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Platform */}
+                  {log.platform && (
+                    <div className="mt-2">
+                      <span
+                        className="badge bg-light text-dark px-2 py-1 rounded"
+                        style={{ fontSize: "0.7rem" }}
+                      >
+                        <i className="bi bi-laptop me-1"></i>
+                        {log.platform}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div
       className="container-fluid min-vh-100 py-4"
@@ -160,65 +509,96 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Status Filter */}
+        {/* Controls - Filter and View Toggle */}
         <div className="row mb-4">
           <div className="col-12">
-            <div className="d-flex flex-wrap gap-2">
-              {["", "playing", "completed", "wishlist", "dropped"].map(
-                (status) => {
-                  const statusConfig = getStatusBadge(status);
-                  return (
-                    <button
-                      key={status}
-                      className="btn fw-bold px-4 py-2 rounded-3 d-flex align-items-center"
-                      onClick={() => setStatusFilter(status)}
-                      style={{
-                        background:
-                          statusFilter === status
-                            ? statusConfig.bg
-                            : "transparent",
-                        color:
-                          statusFilter === status
-                            ? statusConfig.text
-                            : "#2c3e50",
-                        border: `2px solid ${
-                          statusFilter === status ? "transparent" : "#e9ecef"
-                        }`,
-                        transition: "all 0.3s ease",
-                      }}
-                      onMouseOver={(e) => {
-                        if (statusFilter !== status) {
-                          e.target.style.background = statusConfig.bg;
-                          e.target.style.color = statusConfig.text;
-                          e.target.style.borderColor = "transparent";
-                        }
-                      }}
-                      onMouseOut={(e) => {
-                        if (statusFilter !== status) {
-                          e.target.style.background = "transparent";
-                          e.target.style.color = "#2c3e50";
-                          e.target.style.borderColor = "#e9ecef";
-                        }
-                      }}
-                    >
-                      {status === ""
-                        ? "All Games"
-                        : status.charAt(0).toUpperCase() + status.slice(1)}
-                      <span
-                        className="badge bg-light text-dark ms-2"
-                        style={{ fontSize: "0.7rem" }}
+            <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              {/* Status Filter */}
+              <div className="d-flex flex-wrap gap-2">
+                {["", "playing", "completed", "wishlist", "dropped"].map(
+                  (status) => {
+                    const statusConfig = getStatusBadge(status);
+                    return (
+                      <button
+                        key={status}
+                        className="btn fw-bold px-4 py-2 rounded-3 d-flex align-items-center"
+                        onClick={() => setStatusFilter(status)}
+                        style={{
+                          background:
+                            statusFilter === status
+                              ? statusConfig.bg
+                              : "transparent",
+                          color:
+                            statusFilter === status
+                              ? statusConfig.text
+                              : "#2c3e50",
+                          border: `2px solid ${
+                            statusFilter === status ? "transparent" : "#e9ecef"
+                          }`,
+                          transition: "all 0.3s ease",
+                        }}
+                        onMouseOver={(e) => {
+                          if (statusFilter !== status) {
+                            e.target.style.background = statusConfig.bg;
+                            e.target.style.color = statusConfig.text;
+                            e.target.style.borderColor = "transparent";
+                          }
+                        }}
+                        onMouseOut={(e) => {
+                          if (statusFilter !== status) {
+                            e.target.style.background = "transparent";
+                            e.target.style.color = "#2c3e50";
+                            e.target.style.borderColor = "#e9ecef";
+                          }
+                        }}
                       >
-                        {getStatusCount(status)}
-                      </span>
-                    </button>
-                  );
-                }
-              )}
+                        {status === ""
+                          ? "All Games"
+                          : status.charAt(0).toUpperCase() + status.slice(1)}
+                        <span
+                          className="badge bg-light text-dark ms-2"
+                          style={{ fontSize: "0.7rem" }}
+                        >
+                          {getStatusCount(status)}
+                        </span>
+                      </button>
+                    );
+                  }
+                )}
+              </div>
+
+              {/* View Toggle */}
+              <div className="btn-group" role="group">
+                <button
+                  type="button"
+                  className={`btn fw-bold px-4 py-2 rounded-3 ${
+                    viewMode === "tile"
+                      ? "btn-primary text-white"
+                      : "btn-outline-primary"
+                  }`}
+                  onClick={() => setViewMode("tile")}
+                >
+                  <i className="bi bi-grid-3x3-gap me-2"></i>
+                  Tile View
+                </button>
+                <button
+                  type="button"
+                  className={`btn fw-bold px-4 py-2 rounded-3 ${
+                    viewMode === "list"
+                      ? "btn-primary text-white"
+                      : "btn-outline-primary"
+                  }`}
+                  onClick={() => setViewMode("list")}
+                >
+                  <i className="bi bi-list-ul me-2"></i>
+                  List View
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Logs Grid */}
+        {/* Logs Display */}
         {loading ? (
           <div className="row">
             {[...Array(12)].map((_, i) => (
@@ -274,204 +654,10 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+        ) : viewMode === "tile" ? (
+          <TileView />
         ) : (
-          <div className="row">
-            {logs.map((log) => {
-              const statusConfig = getStatusBadge(log.status);
-              return (
-                <div
-                  key={log.id}
-                  className="col-12 col-md-6 col-lg-4 col-xl-3 mb-4"
-                >
-                  <div
-                    className="custom-card h-100"
-                    style={{
-                      cursor: "pointer",
-                      height: "380px",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {/* Game Image */}
-                    <div
-                      className="position-relative overflow-hidden"
-                      style={{ flex: "0 0 auto" }}
-                    >
-                      <img
-                        src={
-                          log.game.background_image ||
-                          "https://via.placeholder.com/400x225?text=No+Image"
-                        }
-                        alt={log.game.name}
-                        className="w-100"
-                        style={{
-                          height: "180px",
-                          objectFit: "cover",
-                          borderTopLeftRadius: "16px",
-                          borderTopRightRadius: "16px",
-                        }}
-                        onClick={() => handleCardClick(log)}
-                      />
-                      <div className="position-absolute top-0 end-0 m-2">
-                        <span
-                          className="badge fw-bold px-3 py-2 rounded-pill"
-                          style={{
-                            background: statusConfig.bg,
-                            color: statusConfig.text,
-                            fontSize: "0.8rem",
-                          }}
-                        >
-                          {log.status}
-                        </span>
-                      </div>
-                      <div className="position-absolute top-0 start-0 m-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(log.id);
-                          }}
-                          className="btn btn-sm d-flex align-items-center justify-content-center rounded-circle"
-                          style={{
-                            width: "32px",
-                            height: "32px",
-                            background: "rgba(231, 76, 60, 0.9)",
-                            color: "white",
-                            border: "none",
-                          }}
-                          onMouseOver={(e) => {
-                            e.target.style.background = "#e74c3c";
-                            e.target.style.transform = "scale(1.1)";
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.background =
-                              "rgba(231, 76, 60, 0.9)";
-                            e.target.style.transform = "scale(1)";
-                          }}
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Game Info */}
-                    <div
-                      className="card-body d-flex flex-column p-4"
-                      style={{ flex: "1 1 auto" }}
-                      onClick={() => handleCardClick(log)}
-                    >
-                      <h6
-                        className="card-title fw-bold mb-3 line-clamp-2"
-                        style={{
-                          color: "#2c3e50",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          minHeight: "48px",
-                          lineHeight: "1.3",
-                        }}
-                      >
-                        {log.game.name}
-                      </h6>
-
-                      <div className="mt-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <div className="text-center">
-                            <div
-                              className="fw-bold"
-                              style={{ color: "#2c3e50", fontSize: "1.1rem" }}
-                            >
-                              {log.hours_played || 0}
-                            </div>
-                            <div
-                              style={{
-                                color: "#7f8c8d",
-                                fontSize: "0.8rem",
-                                fontWeight: "500",
-                              }}
-                            >
-                              Hours
-                            </div>
-                          </div>
-
-                          <div className="text-center">
-                            <div
-                              className="fw-bold d-flex align-items-center justify-content-center"
-                              style={{ color: "#f39c12", fontSize: "1.1rem" }}
-                            >
-                              <i className="bi bi-star-fill me-1"></i>
-                              {log.rating || "N/A"}
-                            </div>
-                            <div
-                              style={{
-                                color: "#7f8c8d",
-                                fontSize: "0.8rem",
-                                fontWeight: "500",
-                              }}
-                            >
-                              Rating
-                            </div>
-                          </div>
-
-                          <div className="text-center">
-                            <div
-                              className="fw-bold"
-                              style={{ color: "#2c3e50", fontSize: "1.1rem" }}
-                            >
-                              {log.game.released
-                                ? new Date(log.game.released).getFullYear()
-                                : "TBA"}
-                            </div>
-                            <div
-                              style={{
-                                color: "#7f8c8d",
-                                fontSize: "0.8rem",
-                                fontWeight: "500",
-                              }}
-                            >
-                              Released
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Review Preview */}
-                        {log.review && (
-                          <div className="mt-3">
-                            <p
-                              className="small mb-0 line-clamp-2"
-                              style={{
-                                color: "#7f8c8d",
-                                fontStyle: "italic",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden",
-                              }}
-                            >
-                              "{log.review}"
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Platform */}
-                        {log.platform && (
-                          <div className="mt-2">
-                            <span
-                              className="badge bg-light text-dark px-2 py-1 rounded"
-                              style={{ fontSize: "0.7rem" }}
-                            >
-                              <i className="bi bi-laptop me-1"></i>
-                              {log.platform}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <ListView />
         )}
       </div>
 
@@ -692,6 +878,19 @@ export default function Dashboard() {
         .custom-card:hover {
           transform: translateY(-5px);
           box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .custom-list-row:hover {
+          background-color: #f8f9fa;
+          transform: translateY(-1px);
+          transition: all 0.2s ease;
+        }
+        
+        .line-clamp-1 {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         
         .line-clamp-2 {

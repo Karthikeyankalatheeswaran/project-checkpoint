@@ -1,504 +1,181 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const gamingQuotes = [
+    "The right man in the wrong place can make all the difference in the world.",
+    "It's dangerous to go alone! Take this.",
+    "War. War never changes.",
+    "The cake is a lie.",
+    "Would you kindly?",
+    "No lollygagging.",
+    "I used to be an adventurer like you, then I took an arrow in the knee.",
+    "You must construct additional pylons!",
+    "Stay a while and listen...",
+    "It's-a me, Mario!",
+    "Finish him!",
+    "All your base are belong to us.",
+  ];
+
+  const randomQuote =
+    gamingQuotes[Math.floor(Math.random() * gamingQuotes.length)];
+
   return (
-    <footer className="bg-dark text-light">
-      <div className="container-fluid px-4">
-        <div className="container py-5">
-          <div className="row g-4">
-            {/* Brand Section */}
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="d-flex align-items-center mb-3">
-                <div
-                  className="rounded-circle d-flex align-items-center justify-content-center me-3"
+    <footer className="bg-dark text-light py-4">
+      <div className="container">
+        <div className="row align-items-center">
+          {/* Brand Section */}
+          <div className="col-md-4 text-center text-md-start mb-3 mb-md-0">
+            <div className="d-flex align-items-center justify-content-center justify-content-md-start">
+              <div className="me-3">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/686/686589.png"
+                  alt="Checkpoint"
                   style={{
                     width: "40px",
                     height: "40px",
-                    background: "linear-gradient(135deg, #3498db, #9b59b6)",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
+                    objectFit: "contain",
                   }}
-                >
-                  CP
-                </div>
+                />
+              </div>
+              <div>
                 <h5 className="fw-bold mb-0" style={{ color: "white" }}>
                   Checkpoint
                 </h5>
-              </div>
-              <p
-                className="text-light mb-4"
-                style={{ lineHeight: "1.6", opacity: "0.8" }}
-              >
-                The ultimate gaming companion for tracking progress, discovering
-                new adventures, and connecting with fellow gamers worldwide.
-              </p>
-              <div className="d-flex gap-3">
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{
-                    opacity: "0.7",
-                    transition: "all 0.3s ease",
-                    fontSize: "1.5rem",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.opacity = "1";
-                    e.target.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.opacity = "0.7";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  <i className="bi bi-twitter"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{
-                    opacity: "0.7",
-                    transition: "all 0.3s ease",
-                    fontSize: "1.5rem",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.opacity = "1";
-                    e.target.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.opacity = "0.7";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  <i className="bi bi-discord"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{
-                    opacity: "0.7",
-                    transition: "all 0.3s ease",
-                    fontSize: "1.5rem",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.opacity = "1";
-                    e.target.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.opacity = "0.7";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  <i className="bi bi-github"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-light text-decoration-none"
-                  style={{
-                    opacity: "0.7",
-                    transition: "all 0.3s ease",
-                    fontSize: "1.5rem",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.opacity = "1";
-                    e.target.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.opacity = "0.7";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  <i className="bi bi-youtube"></i>
-                </a>
+                <p className="small mb-0" style={{ opacity: "0.7" }}>
+                  Your Gaming Companion
+                </p>
               </div>
             </div>
+          </div>
 
-            {/* Quick Links */}
-            <div className="col-lg-2 col-md-6 mb-4">
-              <h6
-                className="fw-bold mb-3 text-uppercase"
-                style={{ color: "#3498db" }}
-              >
-                Explore
-              </h6>
-              <ul className="list-unstyled">
-                <li className="mb-2">
-                  <Link
-                    to="/"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#3498db";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <Link
-                    to="/dashboard"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#3498db";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    My Logs
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <Link
-                    to="/search"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#3498db";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Search Games
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#features"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#3498db";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Features
-                  </a>
-                </li>
-              </ul>
-            </div>
+          {/* Gaming Quote */}
+          <div className="col-md-4 text-center mb-3 mb-md-0">
+            <p
+              className="mb-0 fst-italic"
+              style={{ opacity: "0.8", fontSize: "0.9rem" }}
+            >
+              "{randomQuote}"
+            </p>
+          </div>
 
-            {/* Support */}
-            <div className="col-lg-2 col-md-6 mb-4">
-              <h6
-                className="fw-bold mb-3 text-uppercase"
-                style={{ color: "#9b59b6" }}
+          {/* Social Links */}
+          <div className="col-md-4 text-center text-md-end">
+            <div className="d-flex justify-content-center justify-content-md-end gap-3">
+              <a
+                href="#"
+                className="text-light text-decoration-none"
+                style={{
+                  opacity: "0.7",
+                  transition: "all 0.3s ease",
+                  fontSize: "1.3rem",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.opacity = "1";
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.color = "#1DA1F2";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.opacity = "0.7";
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.color = "white";
+                }}
+                title="Twitter"
               >
-                Support
-              </h6>
-              <ul className="list-unstyled">
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#9b59b6";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Help Center
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#9b59b6";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Community
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#9b59b6";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Contact Us
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#9b59b6";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Feedback
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div className="col-lg-2 col-md-6 mb-4">
-              <h6
-                className="fw-bold mb-3 text-uppercase"
-                style={{ color: "#27ae60" }}
+                <i className="bi bi-twitter"></i>
+              </a>
+              <a
+                href="#"
+                className="text-light text-decoration-none"
+                style={{
+                  opacity: "0.7",
+                  transition: "all 0.3s ease",
+                  fontSize: "1.3rem",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.opacity = "1";
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.color = "#5865F2";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.opacity = "0.7";
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.color = "white";
+                }}
+                title="Discord"
               >
-                Legal
-              </h6>
-              <ul className="list-unstyled">
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#27ae60";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Privacy Policy
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#27ae60";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Terms of Service
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#27ae60";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    Cookie Policy
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a
-                    href="#"
-                    className="text-light text-decoration-none"
-                    style={{
-                      opacity: "0.8",
-                      transition: "all 0.3s ease",
-                      fontSize: "0.95rem",
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.opacity = "1";
-                      e.target.style.color = "#27ae60";
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.opacity = "0.8";
-                      e.target.style.color = "white";
-                    }}
-                  >
-                    GDPR
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Newsletter */}
-            <div className="col-lg-2 col-md-6 mb-4">
-              <h6
-                className="fw-bold mb-3 text-uppercase"
-                style={{ color: "#f39c12" }}
+                <i className="bi bi-discord"></i>
+              </a>
+              <a
+                href="#"
+                className="text-light text-decoration-none"
+                style={{
+                  opacity: "0.7",
+                  transition: "all 0.3s ease",
+                  fontSize: "1.3rem",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.opacity = "1";
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.color = "white";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.opacity = "0.7";
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.color = "white";
+                }}
+                title="GitHub"
               >
-                Stay Updated
-              </h6>
-              <p
-                className="text-light mb-3"
-                style={{ opacity: "0.8", fontSize: "0.9rem" }}
+                <i className="bi bi-github"></i>
+              </a>
+              <a
+                href="#"
+                className="text-light text-decoration-none"
+                style={{
+                  opacity: "0.7",
+                  transition: "all 0.3s ease",
+                  fontSize: "1.3rem",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.opacity = "1";
+                  e.target.style.transform = "translateY(-2px)";
+                  e.target.style.color = "#FF0000";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.opacity = "0.7";
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.color = "white";
+                }}
+                title="YouTube"
               >
-                Get the latest gaming news and updates
-              </p>
-              <div className="input-group">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Your email"
-                  style={{
-                    background: "rgba(255,255,255,0.1)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    color: "white",
-                    fontSize: "0.9rem",
-                  }}
-                />
-                <button
-                  className="btn fw-bold"
-                  style={{
-                    background: "linear-gradient(135deg, #f39c12, #e67e22)",
-                    color: "white",
-                    border: "none",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Join
-                </button>
-              </div>
+                <i className="bi bi-youtube"></i>
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div
-          className="border-top"
-          style={{ borderColor: "rgba(255,255,255,0.1) !important" }}
-        >
-          <div className="container py-3">
-            <div className="row align-items-center">
-              <div className="col-md-6 text-center text-md-start">
-                <p
-                  className="mb-0"
-                  style={{ opacity: "0.7", fontSize: "0.9rem" }}
-                >
-                  © {currentYear} Checkpoint. All rights reserved.
-                </p>
-              </div>
-              <div className="col-md-6 text-center text-md-end">
-                <p
-                  className="mb-0"
-                  style={{ opacity: "0.7", fontSize: "0.9rem" }}
-                >
-                  Made with <span style={{ color: "#e74c3c" }}>♥</span> for
-                  gamers worldwide
-                </p>
-              </div>
-            </div>
+        {/* Copyright */}
+        <div className="row mt-3">
+          <div className="col-12 text-center">
+            <p className="mb-0 small" style={{ opacity: "0.6" }}>
+              © {currentYear} Checkpoint. Made with{" "}
+              <span style={{ color: "#e74c3c" }}>♥</span> for gamers.
+            </p>
           </div>
         </div>
       </div>
 
       <style jsx>{`
         footer {
-          background: #2c3e50 !important;
-          margin-top: auto;
+          background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        footer a:hover {
-          text-decoration: none;
-        }
-        
-        footer .form-control::placeholder {
-          color: rgba(255, 255, 255, 0.6);
-        }
-        
-        footer .form-control:focus {
-          background: rgba(255, 255, 255, 0.15);
-          border-color: #3498db;
-          box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-          color: white;
-        }
-        
-        .container-fluid {
-          padding-left: 0;
-          padding-right: 0;
+        @media (max-width: 768px) {
+          .col-md-4 {
+            margin-bottom: 1rem;
+          }
         }
       `}</style>
     </footer>

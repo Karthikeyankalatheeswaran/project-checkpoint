@@ -10,6 +10,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Footer from "./components/Footer";
+import ProfilePage from "./pages/ProfilePage";
+import FriendsSearchPage from "./pages/FriendsSearchPage";
 import "./index.css";
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
             <Route path="/search" element={<SearchGames />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/friends/search" element={<FriendsSearchPage />} />
           </Routes>
         </main>
         <Footer /> {/* Add Footer here */}
