@@ -1,50 +1,53 @@
-import { useState } from "react";
-import { searchGames, logGame } from "../services/api";
+import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { searchGames } from "../services/api";
 
 export default function SearchGames() {
-  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const query = searchParams.get("q") || "";
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/search-games/?q=zelda")
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  const handleSearch = async () => {
-    try {
-      const res = await searchGames(query);
-      setResults(res.data.results);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleLog = async (gameId) => {
-    try {
-      await logGame({ rawg_id: gameId, status: "completed" });
-      alert("Game logged!");
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    const fetchResults = async () => {
+      if (!query) return;
+      setLoading(true);
+      try {
+        const data = await searchGames(query);
+        setResults(data.results || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResults();
+  }, [query]);
 
   return (
-    <div>
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search games..."
-      />
-      <button onClick={handleSearch}>Search</button>
-
-      <div>
+    <div className="container mt-4">
+      <h3>Search results for: “{query}”</h3>
+      {loading && <p>Loading...</p>}
+      {!loading && !results.length && <p>No results found.</p>}
+      <div className="row">
         {results.map((g) => (
-          <div key={g.rawg_id}>
-            <h5>{g.name}</h5>
-            <img src={g.background_image} width={200} />
-            <button onClick={() => handleLog(g.rawg_id)}>Log Game</button>
+          <div
+            key={g.rawg_id}
+            className="col-md-3 mb-4"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(`/game/${g.rawg_id}`)} // 👈 this line enables navigation
+          >
+            <img
+              src={g.background_image}
+              alt={g.name}
+              width="100%"
+              style={{ borderRadius: "8px" }}
+            />
+            <h6 className="mt-2">{g.name}</h6>
+            <p className="text-muted" style={{ fontSize: "0.9em" }}>
+              Released: {g.released}
+            </p>
           </div>
         ))}
       </div>
