@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getDashboard, editGameLog, deleteGameLog } from "../services/api";
+import ReviewPopup from "../components/ReviewPopup";
 
 export default function Dashboard() {
   const [logs, setLogs] = useState([]);
@@ -7,7 +8,8 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedLog, setSelectedLog] = useState(null);
   const [editData, setEditData] = useState({});
-  const [viewMode, setViewMode] = useState("tile"); // "tile" or "list"
+  const [viewMode, setViewMode] = useState("tile");
+  const [selectedReview, setSelectedReview] = useState(null);
 
   const fetchLogs = async (status = "") => {
     setLoading(true);
@@ -194,6 +196,10 @@ export default function Dashboard() {
                               maxWidth: "200px",
                             }}
                             title={log.review}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedReview(log.review);
+                            }}
                           >
                             "{log.review}"
                           </div>
@@ -240,7 +246,7 @@ export default function Dashboard() {
     </div>
   );
 
-  // Tile View Component (your original grid view)
+  // Tile View Component
   const TileView = () => (
     <div className="row">
       {logs.map((log) => {
@@ -400,19 +406,53 @@ export default function Dashboard() {
                   {/* Review Preview */}
                   {log.review && (
                     <div className="mt-3">
-                      <p
-                        className="small mb-0 line-clamp-2"
+                      <div
+                        className="p-2 rounded-2"
                         style={{
-                          color: "#7f8c8d",
-                          fontStyle: "italic",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
+                          backgroundColor: "#f8f9fa",
+                          border: "1px solid #e9ecef",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedReview(log.review);
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.backgroundColor = "#e9ecef";
+                          e.target.style.borderColor = "#3498db";
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.backgroundColor = "#f8f9fa";
+                          e.target.style.borderColor = "#e9ecef";
                         }}
                       >
-                        "{log.review}"
-                      </p>
+                        <p
+                          className="small mb-0 line-clamp-2"
+                          style={{
+                            color: "#7f8c8d",
+                            fontStyle: "italic",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <i
+                            className="bi bi-chat-quote me-1"
+                            style={{ color: "#3498db" }}
+                          ></i>
+                          "{log.review}"
+                        </p>
+                        <div className="text-end mt-1">
+                          <small
+                            className="text-muted"
+                            style={{ fontSize: "0.7rem" }}
+                          >
+                            Click to read full review
+                          </small>
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -856,14 +896,16 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Review Popup */}
+      <ReviewPopup
+        review={selectedReview}
+        onClose={() => setSelectedReview(null)}
+      />
+
       <style jsx>{`
         @keyframes loading {
-          0% {
-            background-position: 200% 0;
-          }
-          100% {
-            background-position: -200% 0;
-          }
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
         }
         
         .custom-card {

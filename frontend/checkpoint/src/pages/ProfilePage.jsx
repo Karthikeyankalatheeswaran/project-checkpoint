@@ -11,6 +11,7 @@ import {
   acceptFriendRequest,
   rejectFriendRequest,
 } from "../services/api";
+import ReviewPopup from "../components/ReviewPopup";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const [friendStatus, setFriendStatus] = useState(null);
   const [activeTab, setActiveTab] = useState("games");
+  const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -341,17 +343,30 @@ export default function ProfilePage() {
             navigate={navigate}
             getStatusBadge={getStatusBadge}
             isOwnProfile={isOwnProfile}
+            onReviewClick={setSelectedReview}
           />
         )}
 
         {activeTab === "friends" && isOwnProfile && <FriendsTab />}
       </div>
+
+      {/* Review Popup */}
+      <ReviewPopup
+        review={selectedReview}
+        onClose={() => setSelectedReview(null)}
+      />
     </div>
   );
 }
 
 // Games Tab Component
-function GamesTab({ logs, navigate, getStatusBadge, isOwnProfile }) {
+function GamesTab({
+  logs,
+  navigate,
+  getStatusBadge,
+  isOwnProfile,
+  onReviewClick,
+}) {
   if (logs.length === 0) {
     return (
       <div className="col-12">
@@ -401,11 +416,11 @@ function GamesTab({ logs, navigate, getStatusBadge, isOwnProfile }) {
                 display: "flex",
                 flexDirection: "column",
               }}
-              onClick={() => navigate(`/game/${log.game.rawg_id}`)}
             >
               <div
                 className="position-relative overflow-hidden"
                 style={{ flex: "0 0 auto" }}
+                onClick={() => navigate(`/game/${log.game.rawg_id}`)}
               >
                 <img
                   src={
@@ -451,6 +466,7 @@ function GamesTab({ logs, navigate, getStatusBadge, isOwnProfile }) {
                     lineHeight: "1.3",
                     fontSize: "0.9rem",
                   }}
+                  onClick={() => navigate(`/game/${log.game.rawg_id}`)}
                 >
                   {log.game.name}
                 </h6>
@@ -484,19 +500,51 @@ function GamesTab({ logs, navigate, getStatusBadge, isOwnProfile }) {
                   </div>
 
                   {log.review && (
-                    <p
-                      className="small mb-0 line-clamp-2"
+                    <div
+                      className="mt-2 p-2 rounded-2"
                       style={{
-                        color: "#7f8c8d",
-                        fontStyle: "italic",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
+                        backgroundColor: "#f8f9fa",
+                        border: "1px solid #e9ecef",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                      }}
+                      onClick={() => onReviewClick(log.review)}
+                      onMouseOver={(e) => {
+                        e.target.style.backgroundColor = "#e9ecef";
+                        e.target.style.borderColor = "#3498db";
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "#f8f9fa";
+                        e.target.style.borderColor = "#e9ecef";
                       }}
                     >
-                      "{log.review}"
-                    </p>
+                      <p
+                        className="small mb-0 line-clamp-2 text-truncate"
+                        style={{
+                          color: "#7f8c8d",
+                          fontStyle: "italic",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                        title="Click to read full review"
+                      >
+                        <i
+                          className="bi bi-chat-quote me-1"
+                          style={{ color: "#3498db" }}
+                        ></i>
+                        "{log.review}"
+                      </p>
+                      <div className="text-end mt-1">
+                        <small
+                          className="text-muted"
+                          style={{ fontSize: "0.7rem" }}
+                        >
+                          Click to read full review
+                        </small>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -508,7 +556,7 @@ function GamesTab({ logs, navigate, getStatusBadge, isOwnProfile }) {
   );
 }
 
-// Friends Tab Component (keep the same as before)
+// Friends Tab Component
 function FriendsTab() {
   const [friends, setFriends] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -633,7 +681,7 @@ function FriendsTab() {
   );
 }
 
-// Friend Card Component (keep the same)
+// Friend Card Component
 function FriendCard({ friend }) {
   const navigate = useNavigate();
 
@@ -670,7 +718,7 @@ function FriendCard({ friend }) {
   );
 }
 
-// Pending Request Card Component (keep the same)
+// Pending Request Card Component
 function PendingRequestCard({ request, onUpdate }) {
   const handleAccept = async () => {
     try {

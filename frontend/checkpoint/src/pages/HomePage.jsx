@@ -211,7 +211,7 @@ export default function HomePage() {
                         transform: "rotate(15deg)",
                       }}
                     >
-                      Since 1998
+                      Since 2K
                     </div>
                     <div
                       className="position-absolute rounded-pill d-flex align-items-center justify-content-center"
@@ -228,7 +228,7 @@ export default function HomePage() {
                         transform: "rotate(-10deg)",
                       }}
                     >
-                      500+ Games
+                      200+ Games
                     </div>
                   </div>
 
@@ -240,7 +240,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#3498db" }}
                         >
-                          25+
+                          15+
                         </div>
                         <div
                           style={{
@@ -259,7 +259,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#9b59b6" }}
                         >
-                          150+
+                          170+
                         </div>
                         <div
                           style={{
@@ -278,7 +278,7 @@ export default function HomePage() {
                           className="fw-bold display-6"
                           style={{ color: "#27ae60" }}
                         >
-                          2K+
+                          20K+
                         </div>
                         <div
                           style={{
@@ -310,7 +310,7 @@ export default function HomePage() {
                         Creator's Journey
                       </div>
                       <div className="text-muted small">
-                        <i className="bi bi-controller me-1"></i>Lifetime Gamer
+                        <i className="bi bi-controller me-1"></i>Veteran Gamer
                       </div>
                     </div>
 
@@ -340,12 +340,12 @@ export default function HomePage() {
                           marginBottom: "1.5rem",
                         }}
                       >
-                        My gaming journey began with a Nintendo 64 and has
-                        evolved through every generation since. From mastering{" "}
-                        <strong>Ocarina of Time</strong>
-                        to getting lost in <strong>The Witcher 3</strong>, each
-                        game shaped my understanding of what makes gaming
-                        magical.
+                        As an avid gamer who's journeyed through countless
+                        virtual worlds, I've experienced the thrill of epic
+                        quests, the camaraderie of multiplayer battles, and the
+                        joy of discovering hidden gems. Yet, amidst these
+                        adventures, I've often found myself longing for a way to
+                        document and celebrate my gaming experiences.
                       </p>
 
                       <p
@@ -359,7 +359,7 @@ export default function HomePage() {
                         Checkpoint was born from countless notebooks filled with
                         game progress, hand-drawn maps, and the realization that
                         our gaming stories deserve to be preserved and shared.
-                        It's the platform I wish I had during my 25+ years of
+                        It's the platform I wish I had during my 15+ years of
                         gaming.
                       </p>
                     </div>
@@ -385,15 +385,16 @@ export default function HomePage() {
                             className="fw-bold mb-2"
                             style={{ color: "#2c3e50" }}
                           >
-                            Gaming Philosophy
+                            Gaming is More Than Just a Hobby
                           </h6>
                           <p
                             className="mb-0"
                             style={{ color: "#5d6d7e", fontSize: "0.95rem" }}
                           >
                             "Every game tells a story, and every player's
-                            journey is unique. We're not just tracking
-                            progress—we're preserving memories."
+                            journey is unique. Checkpoint is my way of honoring
+                            the stories we've lived and the adventures yet to
+                            come."
                           </p>
                         </div>
                       </div>

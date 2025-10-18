@@ -56,7 +56,7 @@ def register_user(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def search_games(request):
-    query = request.GET.get("q", "")  # default empty string
+    query = request.GET.get("q", "")
     page = request.GET.get("page", 1)
     
     try:
@@ -66,11 +66,10 @@ def search_games(request):
     except (ValueError, TypeError):
         page = 1
 
-    # Check DB first - add pagination here too
+    # Check DB first
     games = Game.objects.all()
     if games.exists() and not query:
-        # Add basic pagination for DB results
-        page_size = 20  # Match RAWG API page size
+        page_size = 20
         start_index = (page - 1) * page_size
         end_index = start_index + page_size
         paginated_games = games[start_index:end_index]
@@ -84,7 +83,7 @@ def search_games(request):
             "current_page": page
         })
 
-    # Fetch from RAWG with proper page parameter
+    # Fetch from RAWG
     data = get_games(search_query=query, page=page)
     results = []
 
@@ -96,11 +95,11 @@ def search_games(request):
                 "released": g.get("released"),
                 "background_image": g.get("background_image"),
                 "rating": g.get("rating"),
+                "description": g.get("description_raw", ""),  # Add this line
             },
         )
         results.append(GameSerializer(game).data)
 
-    # Preserve RAWG pagination info
     response_data = {
         "results": results, 
         "source": "rawg",
@@ -112,7 +111,6 @@ def search_games(request):
     }
     
     return Response(response_data)
-
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -487,6 +485,7 @@ def get_friend_status(request, username):
 
 
 # ===== HELPER FUNCTIONS =====
+# In your views.py, update the get_or_create_game function
 def get_or_create_game(rawg_game_data):
     game, created = Game.objects.get_or_create(
         rawg_id=rawg_game_data["id"],
@@ -495,7 +494,7 @@ def get_or_create_game(rawg_game_data):
             "released": rawg_game_data.get("released"),
             "background_image": rawg_game_data.get("background_image"),
             "rating": rawg_game_data.get("rating"),
-            
+            "description": rawg_game_data.get("description_raw", ""),  # Add this line
         },
     )
     return game
