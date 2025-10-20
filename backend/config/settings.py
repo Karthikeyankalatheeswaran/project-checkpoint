@@ -53,7 +53,7 @@ ROOT_URLCONF = 'config.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite frontend
-    https://checkpoint-yy68.onrender.com,
+    "https://projectcheckpoint.onrender.com",
 ]
 
 
